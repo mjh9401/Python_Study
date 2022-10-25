@@ -1,3 +1,4 @@
+from ast import While
 import os
 import csv
 from post import Post
@@ -37,8 +38,59 @@ def write_post():
 
 def list_post():
     """게시글 출력 함수"""
-    print(post_list)
+    print("\n\n- 게시글 목록 -")
+    id_list = []
+    for post in post_list:
+        print("번호 : ",post.get_id())
+        print("제목 : ",post.get_title())
+        print("조회수 : ",post.get_view_count())
+        print("")
+        id_list.append(post.get_id())
 
+    while True:
+        print("Q) 글 번호를 선택해 주세요 (메뉴로 돌아가려면 -1을 입력해주세요)")
+        try:
+            id = int(input(">>>"))
+            if id in id_list :
+                detail_post(id)
+                break
+            elif id == -1:
+                break
+            else :
+                print("없는 글 번호 입니다.")
+        except ValueError:
+            print("숫자를 입력해주세요")
+
+# 글 상세 페이지
+def detail_post(id):
+    """ 게시글 상세 보기 함수"""
+    print("\n\n - 게시글 상세 -")
+
+    for post in post_list:
+        if post.get_id() == id :
+            # 조회수 증가
+            post.add_view_count()
+            print("번호 : ", post.get_id())
+            print("제목 : ", post.get_title())
+            print("본문 : ", post.get_content())
+            print("조회수 : ", post.get_view_count())
+    
+    while True :
+        print("Q) 수정 :1 삭제 :2(메뉴로 돌아가려면 -1을 입력)")
+        try:
+            choice = int(input(">>>"))
+            if choice == 1:
+                print("수정")
+                break
+            elif choice == 2:
+                print("삭제")
+                break
+            elif choice == -1:
+                break
+            else:
+                print("잘못 입력하였습니다.")
+        except ValueError:
+            print("숫자를 입력해주세요")
 
 # 메뉴 출력하기
 while True:
