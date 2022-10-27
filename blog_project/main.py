@@ -1,4 +1,5 @@
 from ast import While
+from importlib.resources import contents
 import os
 import csv
 from post import Post
@@ -74,16 +75,17 @@ def detail_post(id):
             print("제목 : ", post.get_title())
             print("본문 : ", post.get_content())
             print("조회수 : ", post.get_view_count())
+            targetPost = post
     
     while True :
         print("Q) 수정 :1 삭제 :2(메뉴로 돌아가려면 -1을 입력)")
         try:
             choice = int(input(">>>"))
             if choice == 1:
-                print("수정")
+                update_post(targetPost)
                 break
             elif choice == 2:
-                print("삭제")
+                delete_post(targetPost)
                 break
             elif choice == -1:
                 break
@@ -91,6 +93,35 @@ def detail_post(id):
                 print("잘못 입력하였습니다.")
         except ValueError:
             print("숫자를 입력해주세요")
+
+# 게시글 수정
+def update_post(target_post):
+    """게시글 수정 함수"""
+    print("\n\n -게시글 수정-")
+    title = input("제목을 입력해 주세요\n >>>")
+    contents = input("본문을 입력해주세요\n >>>")
+    target_post.set_post(target_post.id, title, contents, target_post.view_count)
+    print("# 게시글이 수정되었습니다.")
+
+# 게시글 삭제
+def delete_post(targetPost):
+    """게시글 삭제 함수"""
+    post_list.remove(targetPost)
+    print("# 게시글이 삭제되었습니다.")
+
+# 게시글 저장
+def save():
+    """게시글 저장 함수"""
+    f = open(file_path,"w",encoding="utf-8", newline="")
+    writer = csv.writer(f)
+
+    for post in post_list:
+        row = [post.get_id(), post.get_title(), post.get_content(), post.get_view_count()]
+        writer.writerow(row)
+    f.close()
+    print("# 저장이 완료되었습니다.") 
+    print("# 프로그램 종료")
+    
 
 # 메뉴 출력하기
 while True:
@@ -110,5 +141,5 @@ while True:
         elif choice == 2:
             list_post()
         elif choice == 3:
-            print("프로그램 종료")
+            save()
             break
